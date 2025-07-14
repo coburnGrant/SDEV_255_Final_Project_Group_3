@@ -1,42 +1,44 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* App layout styles */
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.main-content {
+  flex: 1;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Ivy Tech branding colors */
+:root {
+  --ivy-tech-green: rgba(1, 85, 56, 1);
+  --ivy-tech-green-light: rgba(1, 85, 56, 0.1);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Custom button styles */
+.btn-ivy-tech {
+  background-color: var(--ivy-tech-green) !important;
+  border-color: var(--ivy-tech-green) !important;
+  color: white !important;
 }
 
-.card {
-  padding: 2em;
+.btn-ivy-tech:hover {
+  background-color: rgba(1, 85, 56, 0.8) !important;
+  border-color: rgba(1, 85, 56, 0.8) !important;
+  color: white !important;
 }
 
-.read-the-docs {
-  color: #888;
+/* Dark mode enhancements */
+[data-bs-theme="dark"] {
+  --bs-body-bg: #212529;
+  --bs-body-color: #f8f9fa;
+}
+
+/* Theme toggle button */
+#theme-toggle {
+  transition: all 0.3s ease;
+}
+
+#theme-toggle:hover {
+  transform: scale(1.1);
 }

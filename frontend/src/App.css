@@ -15,6 +15,10 @@
   --ivy-tech-green-light: rgba(1, 85, 56, 0.1);
 }
 
+.ivy-tech-text {
+  color: var(--ivy-tech-green);
+}
+
 /* Custom button styles */
 .btn-ivy-tech {
   background-color: var(--ivy-tech-green) !important;

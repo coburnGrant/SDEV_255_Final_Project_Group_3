@@ -1,4 +1,5 @@
 import ComingSoon from "../components/ComingSoon"
+import { Link } from 'react-router-dom';
 
 function Home() {
     return (
@@ -14,9 +15,9 @@ function Home() {
                         <ComingSoon text="This page is currently under development." />
 
                         <div className="mt-4">
-                            <button className="btn me-3 btn-ivy-tech">
+                            <Link to='./courses' className="btn me-3 btn-ivy-tech">
                                 Browse Courses
-                            </button>
+                            </Link>
                             <button className="btn btn-outline-secondary">
                                 Learn More
                             </button>

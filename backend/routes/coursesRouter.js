@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const course = await new Course(req.body);
-        
+
         await course.save();
 
         res.status(201).json(course);
@@ -46,10 +46,16 @@ router.get("/:id", async (req, res) => {
 
 // Update a specific course by ID
 router.put("/:id", async (req, res) => {
-    try {
-        const course = req.body;
+    const courseId = req.params.id;
+    const course = req.body;
 
-        await Course.updateOne({ _id: req.params.id }, course);
+    if (!courseId || !course) {
+        res.sendStatus(400);
+        return
+    }
+
+    try {
+        await Course.updateOne({ _id:  courseId}, course);
 
         res.sendStatus(204);
     }

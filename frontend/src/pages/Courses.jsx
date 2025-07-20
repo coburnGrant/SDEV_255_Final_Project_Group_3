@@ -1,6 +1,7 @@
 import ComingSoon from "../components/ComingSoon";
 import { useState, useEffect } from "react";
 import CourseService from '../services/CourseService.js';
+import CourseListRow from "../components/course/CourseListRow.jsx";
 
 
 function Courses() {
@@ -47,10 +48,7 @@ function Courses() {
                     <ul>
                         {courses.length > 0 ? (
                             courses.map(course => (
-                                <li key={course._id}>
-                                    <h3>{course.prefix}-{course.number}</h3>
-                                    <p>{course.description}</p>
-                                </li>
+                                <CourseListRow key={course._id} course={course}/>
                             ))
                         ) : (
                             <ComingSoon text="No courses available at the moment." />

@@ -1,60 +1,36 @@
-const express = require("express")
+const express = require("express");
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const morgan = require('morgan');
 
-var cors = require('cors')
+const app = express();
 
-const bodyParser = require('body-parser')
-const Course = require("./models/courses")
-const app = express()
-app.use(cors())
+app.use(cors());
 
-app.use(express.json())
+// Use body-parsing middleware to parse JSON bodies
+app.use(bodyParser.json());
 
-const router = express.Router()
+// Use morgan for logging HTTP requests
+app.use(morgan('dev'));
 
-router.get("/courses", async(req,res) =>{
-    try{
-        const courses = await Course.find({})
-        res.send(courses)
-        console.log(courses)
-    }
-    catch (err) {
-        console.log(err)
-    }
+// Set up routes
+
+// Course Router
+const coursesRouter = require('./routes/coursesRouter');
+app.use("/api/courses", coursesRouter)
+
+app.get('/add_sample_data', async (req, res) => {
+  console.log('Adding sample courses...');
+  
+  const addSampleCourses = require('./sample_data.js');
+
+  await addSampleCourses();
+
+  res.status(200).send('Sample courses added successfully');
 })
 
-router.get("/courses/:id", async(req,res)=>{
-    try{
-        const course = await Course.findById(req.params.id)
-        res.json(course)
-    }
-    catch{
-        res.status(400).send(err)
-    }
-})
-
-router.post("/courses", async(req,res)=> {
-    try{
-        const course = await new Course(req.body)
-        await course.save()
-        res.status(201).json(course)
-        console.log(course)
-    }
-    catch(err){
-        res.status(400).send(err)
-    }
-})
-
-router.put("/courses/:id", async(req,res)=>{
-    try{
-        const course = req.body
-        await Course.updateOne({_id: req.params.id},course)
-        console.log(course)
-        res.sendStatus(204)
-    }
-    catch(err){
-        res.status(400).send(err)
-    }
-})
-
-app.use("/api", router)
-app.listen(3000)
+// Start web server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

@@ -1,4 +1,6 @@
 # SDEV 255 Final Project Group 3
 
 ## Deployment
-Website is running live on [Render](https://github.com/coburnGrant/SDEV_255_Final_Project_Group_3)
+Live backend URL: [https://sdev-255-final-project-group-3-backend.onrender.com]()
+
+Live front-end URL: [https://sdev-255-final-project-group-3-front-end.onrender.com]()

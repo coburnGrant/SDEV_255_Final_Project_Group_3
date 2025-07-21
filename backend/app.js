@@ -17,17 +17,23 @@ app.use(morgan('dev'));
 
 // Course Router
 const coursesRouter = require('./routes/coursesRouter');
-app.use("/api/courses", coursesRouter)
+app.use("/api/courses", coursesRouter);
 
-app.get('/add_sample_data', async (req, res) => {
-  console.log('Adding sample courses...');
+const swagger = require('./swagger.js');
+
+// Serve Swagger docs
+app.use('/', swagger.ui.serve, swagger.ui.setup(swagger.spec));
+
+// Uncomment to add back sample data adding
+// app.get('/add_sample_data', async (req, res) => {
+//   console.log('Adding sample courses...');
   
-  const addSampleCourses = require('./sample_data.js');
+//   const addSampleCourses = require('./sample_data.js');
 
-  await addSampleCourses();
+//   await addSampleCourses();
 
-  res.status(200).send('Sample courses added successfully');
-})
+//   res.status(200).send('Sample courses added successfully');
+// })
 
 // Start web server
 const PORT = process.env.PORT || 3000;

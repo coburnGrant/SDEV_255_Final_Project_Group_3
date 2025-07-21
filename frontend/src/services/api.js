@@ -2,7 +2,7 @@ import axios from 'axios';
 const env = import.meta.env;
 
 const local = 'http://localhost:3000';
-const BACKEND_HOST = env.API_BASE_URL || local;
+const BACKEND_HOST = env.VITE_API_BASE_URL || local;
 const API_BASE_URL = `${BACKEND_HOST}/api/`;
 
 const api = axios.create({

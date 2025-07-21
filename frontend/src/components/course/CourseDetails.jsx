@@ -1,16 +1,18 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import CourseService from '../../services/CourseService.js';
 
 function CourseDetails() {
     // Grab the courseId from the URL
     const { courseId } = useParams();
+    const navigate = useNavigate();
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const fetchCourse = async () => {
         try {
-            let course = await CourseService.getCourseById(courseId);
+            const course = await CourseService.getCourseById(courseId);
 
             console.log('Fetched course:', course);
 
@@ -23,6 +25,26 @@ function CourseDetails() {
         }
     };
 
+    const deleteCourse = async() => {
+        const confirmation = confirm('Are you sure you want to delete this course?');
+
+        if(!confirmation) {
+            return
+        }
+
+        setLoading(true);
+
+        try {
+            await CourseService.deleteCourse(courseId);
+            // Go back to list of courses
+            navigate('../courses');
+        } catch (error) {
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
         fetchCourse();
     }, [courseId]);
@@ -34,6 +56,9 @@ function CourseDetails() {
             </Link>
 
             {loading && <p>Loading course details...</p>}
+
+            {error && <p>Error: {error}</p>}
+
             <div>
                 <h3 className="text-muted mb-1">{course?.prefix}-{course?.number}</h3>
                 <h2 className="fw-bold">{course?.name}</h2>
@@ -58,7 +83,7 @@ function CourseDetails() {
                 {/* Course Pre-reqs */}
                 <h6>Prerequisites:</h6>
 
-                {course?.prerequisites ? (
+                {course?.prerequisites?.count > 0 ? (
                     <ul className="list-disc pl-5">
                         {course.prerequisites.map((prerequisite, index) => (
                             <li key={index}>{prerequisite}</li>
@@ -91,9 +116,13 @@ function CourseDetails() {
             )}
 
             <div className="d-flex justify-content-end">
-                <Link to={'./edit'} className="btn btn-ivy-tech">
+                <Link to={'./edit'} className="btn btn-ivy-tech me-2">
                     <span>Edit<i className="bi bi-pencil ms-2"></i></span>
                 </Link>
+
+                <button className="btn btn-danger" onClick={deleteCourse}>
+                    <span>Delete<i className="bi bi-trash ms-2"></i></span>
+                </button>
             </div>
         </div>
     );

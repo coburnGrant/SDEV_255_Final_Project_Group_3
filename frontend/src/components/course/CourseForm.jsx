@@ -38,24 +38,23 @@ function CourseForm({ course = {}, onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const processedPreReqs = formData.prerequisites ? formData.prerequisites.split(',').map(s => s.trim()): [];
+    const processedLearningObjectives = formData.learningObjectives ? formData.learningObjectives.split(',').map(s => s.trim()) : [];
+    const processedTopics = formData.topics? formData.topics.split(',').map(s => s.trim()) : [];
+    const processedDateOfLastRevision = formData.dateOfLastRevision ? new Date(formData.dateOfLastRevision) : undefined;
+
     const dataToSubmit = {
       ...formData,
-      prerequisites: formData.prerequisites
-        ? formData.prerequisites.split(',').map(s => s.trim())
-        : [],
-      learningObjectives: formData.learningObjectives
-        ? formData.learningObjectives.split(',').map(s => s.trim())
-        : [],
-      topics: formData.topics
-        ? formData.topics.split(',').map(s => s.trim())
-        : [],
+      prerequisites: processedPreReqs,
+      learningObjectives: processedLearningObjectives,
+      topics: processedTopics,
       creditHoursMin: Number(formData.creditHoursMin),
       creditHoursMax: formData.creditHoursMax ? Number(formData.creditHoursMax) : undefined,
       lectureHoursMin: formData.lectureHoursMin ? Number(formData.lectureHoursMin) : undefined,
-      dateOfLastRevision: formData.dateOfLastRevision
-        ? new Date(formData.dateOfLastRevision)
-        : undefined
+      dateOfLastRevision: processedDateOfLastRevision
     };
+    
     onSubmit(dataToSubmit);
   };
 

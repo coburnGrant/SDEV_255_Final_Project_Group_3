@@ -55,13 +55,14 @@ function EditCourse() {
             {loading && <p>Loading course details...</p>}
             <p>Editing</p>
 
-            <div className="d-flex">
+            <div className="d-flex align-items-center">
                 <h2>{course?.prefix}-{course?.number} | {course?.name}</h2>
 
                 {saving &&
-                    <div class="spinner-border mx-3" role="status">
+                    <div class="spinner-border ivy-tech-text mx-3" role="status">
                         <span class="visually-hidden">Loading...</span>
-                    </div>}
+                    </div>
+                }
             </div>
 
             <CourseForm course={course} onSubmit={updateCourse} />

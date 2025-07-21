@@ -1,7 +1,35 @@
 import ComingSoon from "../components/ComingSoon"
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import CourseService from "../services/CourseService";
+import TrendingCoursesCard from "../components/home/TrendingCoursesCard";
 
 function Home() {
+    const [loading, setLoading] = useState(false);
+    const [trendingCourses, setTrendingCourses] = useState([]);
+    const [error, setError] = useState(null);
+
+    const fetchTrendingCourses = async () => {
+        setLoading(true);
+
+        if (error !== null) {
+            setError(null);
+        }
+
+        try {
+            const courses = await CourseService.getTrendingCourses();
+
+            setTrendingCourses(courses);
+        } catch {
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+    useEffect(() => {
+        fetchTrendingCourses();
+    }, [])
+
     return (
         <div className="container mt-5">
             <div className="row">
@@ -12,7 +40,13 @@ function Home() {
                             A comprehensive course management system for students and teachers.
                         </p>
 
-                        <ComingSoon text="This page is currently under development." />
+                        <div className="col-12">
+                            <TrendingCoursesCard
+                                loading={loading}
+                                error={error}
+                                courses={trendingCourses}
+                            />
+                        </div>
 
                         <div className="mt-4">
                             <Link to='./courses' className="btn me-3 btn-ivy-tech">

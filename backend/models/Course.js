@@ -24,7 +24,9 @@ const courseSchema = new db.Schema({
     // List of learning objectives for the course
     learningObjectives: [{ type: String }],
     // List of topics covered in the course
-    topics: [{ type: String }]
+    topics: [{ type: String }],
+    // Running number of clicks for a course's details view
+    clickCount: { type: Number, default: 0 }
 });
 
 const Course = db.model("Course", courseSchema);

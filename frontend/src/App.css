@@ -11,8 +11,17 @@
 
 /* Ivy Tech branding colors */
 :root {
-  --ivy-tech-green: rgba(1, 85, 56, 1);
-  --ivy-tech-green-light: rgba(1, 85, 56, 0.1);
+  --ivy-tech-green: rgb(1, 85, 56);
+  --ivy-tech-green-light: rgb(1, 137, 85);
+
+  /* Background and surface colors */
+  --dark-bg-color: #181818;
+  --dark-surface-color: #222222;
+  --dark-border-color: #333333;
+  --dark-secondary-color: rgb(85, 85, 85);
+  --light-secondary-color: rgba(183, 183, 183, 0.193);
+  --text-primary: #f1f1f1;
+  --text-muted: #a1a1a1;
 }
 
 .ivy-tech-text {
@@ -32,10 +41,30 @@
   color: white !important;
 }
 
+.course-list-item {
+  background-color: var(--light-secondary-color) !important;
+}
+
 /* Dark mode enhancements */
 [data-bs-theme="dark"] {
-  --bs-body-bg: #212529;
+  --bs-body-bg: var(--dark-bg-color);
   --bs-body-color: #f8f9fa;
+
+  .ivy-tech-text {
+    color: var(--ivy-tech-green-light);
+  }
+
+  .card-body {
+    background-color: var(--dark-surface-color) !important;
+  }
+
+  .bg-secondary {
+    background-color: var(--dark-secondary-color) !important;
+  }
+
+  .course-list-item {
+    background-color: var(--dark-border-color) !important;
+  }
 }
 
 /* Theme toggle button */

@@ -6,7 +6,7 @@ function CourseListRow({ course }) {
     return (
         <li className="list-group-item">
             <h3>
-                <Link to={courseLink} className="ivy-tech-text">
+                <Link to={courseLink} className="ivy-tech-text text-decoration-none">
                     {course.prefix}-{course.number} | {course.name}
                 </Link>
             </h3>

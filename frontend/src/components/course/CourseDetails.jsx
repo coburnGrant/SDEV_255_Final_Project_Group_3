@@ -34,6 +34,10 @@ function CourseDetails() {
 
         setLoading(true);
 
+        if(error !== null) {
+            setError(null);
+        }
+
         try {
             await CourseService.deleteCourse(courseId);
             // Go back to list of courses
@@ -45,8 +49,18 @@ function CourseDetails() {
         }
     }
 
+    const trackClick = async () => {
+        try {
+            await CourseService.incrementCourseDetailsClickCount(courseId);
+        } catch (err) {
+            console.error('Error tracking course view', err);
+        }
+    };
+
     useEffect(() => {
         fetchCourse();
+
+        trackClick();
     }, [courseId]);
 
     return (

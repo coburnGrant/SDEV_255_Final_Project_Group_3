@@ -13,6 +13,10 @@ function AddCourse() {
         setSaving(true);
         setLastSavedCourse(data);
 
+        if(error !== null) {
+            setError(null);
+        }
+
         try {
             const course = await CourseService.createCourse(data);
 

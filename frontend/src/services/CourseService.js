@@ -41,7 +41,7 @@ const CourseService = {
             throw new Error('Failed to create new course');
         }
 
-        if(response.data) {
+        if (response.data) {
             return response.data;
         } else {
             console.error('Received OK status, but no course data when creating new course.');
@@ -64,6 +64,30 @@ const CourseService = {
         if (response.status !== 200) {
             throw new Error('Failed to delete course');
         }
+    },
+
+    incrementCourseDetailsClickCount: async (id) => {
+        const response = await api.post(`${COURSE_API_URL}/${id}/view`);
+
+        if (response.status !== 200) {
+            console.error('Failed to increment click count for course with ID:', id);
+
+            throw new Error('Failed to increment click count');
+        }
+    },
+
+    getTrendingCourses: async (limit) => {
+        const params = limit ? { limit: 5 } : {}
+
+        const response = await api.get(`${COURSE_API_URL}/trending`, {
+            params: params
+        });
+
+        if (response.status !== 200 || !response.data) {
+            throw new Error('Failed to get trending courses', response.statusText);
+        }
+
+        return response.data;
     }
 }
 

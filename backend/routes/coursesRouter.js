@@ -129,7 +129,41 @@ router.post("/", async (req, res) => {
     catch (err) {
         res.status(400).send(err);
     }
-})
+});
+
+/**
+ * @swagger
+ * /api/courses/trending:
+ *  get:
+ *      summary: Gets list of trending courses
+ *      tags: [Courses]
+ *      responses:
+ *          200:
+ *              description: Successfully updated click count for course
+ *          404: 
+ *              description: Bad course ID
+ *          500: 
+ *              description: Failed to get trending courses
+ */
+router.get('/trending', async (req, res) => {
+    console.log('hit trending');
+    
+    const defaultLimit = 5;
+    const reqLimit = parseInt(req.query.limit);
+    const limit = isNaN(reqLimit) ? defaultLimit : reqLimit;
+
+    try {
+        const trendingCourses = await Course.find()
+            .sort({ clickCount: -1 })
+            .limit(limit);
+
+        res.send(trendingCourses);
+    } catch (error) {
+        console.error('Error fetching trending courses:', error);
+
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 /**
  * @swagger
@@ -155,9 +189,8 @@ router.get("/:id", async (req, res) => {
         const course = await Course.findById(req.params.id);
 
         res.json(course);
-    }
-    catch {
-        res.status(400).send(err);
+    }catch(error) {
+        res.status(400).send(error);
     }
 });
 
@@ -240,6 +273,39 @@ router.delete('/:id', async (req, res) => {
         console.log('error deleting course', error);
 
         res.sendStatus(400);
+    }
+});
+
+/**
+ * @swagger
+ * /api/courses/{id}/view:
+ *  post:
+ *      summary: Tracks viewing of a course
+ *      tags: [Courses]
+ *      responses:
+ *          200:
+ *              description: Successfully updated click count for course
+ *          404: 
+ *              description: Bad course ID
+ *          500: 
+ *              description: Failed to update
+ */
+router.post('/:id/view', async(req, res) => {
+    const courseID = req.params.id;
+
+    if (!courseID) {
+        res.sendStatus(404);
+
+        return;
+    }
+
+    try {
+        console.log('incrementing course click')
+        await Course.findByIdAndUpdate(courseID, { $inc: { clickCount: 1 } });
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
     }
 });
 

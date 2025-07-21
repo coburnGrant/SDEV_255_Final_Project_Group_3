@@ -59,8 +59,8 @@ function EditCourse() {
                 <h2>{course?.prefix}-{course?.number} | {course?.name}</h2>
 
                 {saving &&
-                    <div class="spinner-border ivy-tech-text mx-3" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                    <div className="spinner-border ivy-tech-text mx-3" role="status">
+                        <span className="visually-hidden">Loading...</span>
                     </div>
                 }
             </div>

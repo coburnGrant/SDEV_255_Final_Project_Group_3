@@ -88,9 +88,10 @@ router.get("/", async (req, res) => {
     try {
         const courses = await Course.find(query);
         res.send(courses);
-    }
-    catch (err) {
-        console.log(err)
+    } catch (err) {
+        console.log(err);
+
+        res.sendStatus(500);
     }
 })
 
@@ -120,14 +121,13 @@ router.post("/", async (req, res) => {
     }
 
     try {
-        const course = new Course(json);zq
+        const course = new Course(json);
 
         await course.save();
 
         res.status(201).json(course);
-    }
-    catch (err) {
-        res.status(400).send(err);
+    } catch (err) {
+        res.status(500).send(err);
     }
 });
 
@@ -146,8 +146,6 @@ router.post("/", async (req, res) => {
  *              description: Failed to get trending courses
  */
 router.get('/trending', async (req, res) => {
-    console.log('hit trending');
-    
     const defaultLimit = 5;
     const reqLimit = parseInt(req.query.limit);
     const limit = isNaN(reqLimit) ? defaultLimit : reqLimit;
@@ -185,11 +183,17 @@ router.get('/trending', async (req, res) => {
  *         description: Invalid ID
  */
 router.get("/:id", async (req, res) => {
+    const courseId = req.params.id;
+    
+    if(!courseId) {
+        res.sendStatus(400);
+    }
+
     try {
-        const course = await Course.findById(req.params.id);
+        const course = await Course.findById(courseId);
 
         res.json(course);
-    }catch(error) {
+    } catch (error) {
         res.status(400).send(error);
     }
 });
@@ -229,7 +233,7 @@ router.put("/:id", async (req, res) => {
     }
 
     try {
-        await Course.updateOne({ _id:  courseId}, course);
+        await Course.updateOne({ _id: courseId }, course);
 
         res.sendStatus(204);
     }
@@ -266,10 +270,10 @@ router.delete('/:id', async (req, res) => {
     }
 
     try {
-        await Course.deleteOne({_id: courseId});
+        await Course.deleteOne({ _id: courseId });
 
         res.sendStatus(200);
-    } catch(error) {
+    } catch (error) {
         console.log('error deleting course', error);
 
         res.sendStatus(400);
@@ -290,7 +294,7 @@ router.delete('/:id', async (req, res) => {
  *          500: 
  *              description: Failed to update
  */
-router.post('/:id/view', async(req, res) => {
+router.post('/:id/view', async (req, res) => {
     const courseID = req.params.id;
 
     if (!courseID) {
@@ -300,7 +304,6 @@ router.post('/:id/view', async(req, res) => {
     }
 
     try {
-        console.log('incrementing course click')
         await Course.findByIdAndUpdate(courseID, { $inc: { clickCount: 1 } });
         res.sendStatus(200);
     } catch (err) {

@@ -16,8 +16,6 @@ function EditCourse() {
         try {
             let course = await CourseService.getCourseById(courseId);
 
-            console.log('Fetched course:', course);
-
             setCourse(course);
         } catch (error) {
             console.error('Error fetching course:', error);
@@ -33,8 +31,6 @@ function EditCourse() {
 
     const updateCourse = async (data) => {
         try {
-            console.log('updating course...');
-
             setSaving(true);
 
             await CourseService.updateCourse(courseId, data);

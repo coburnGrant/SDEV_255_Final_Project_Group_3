@@ -14,8 +14,6 @@ function CourseDetails() {
         try {
             const course = await CourseService.getCourseById(courseId);
 
-            console.log('Fetched course:', course);
-
             setCourse(course);
         } catch (error) {
             console.error('Error fetching course:', error);

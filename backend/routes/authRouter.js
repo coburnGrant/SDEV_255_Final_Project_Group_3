@@ -1,5 +1,5 @@
 const express = require('express');
-const {User} = require('../models/User');
+const { User } = require('../models/User');
 const Authenticator = require('../Authenticator');
 
 const router = express.Router();
@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
 
     try {
         const user = await User.findOne({ username });
-        
+
         if (!user) {
             return res.status(401).json({ error: "Failed to authenticate." });
         }
@@ -48,10 +48,10 @@ router.get("/status", async (req, res) => {
     try {
         const decoded = Authenticator.verifyToken(token);
 
-        if(!decoded) {
+        if (!decoded) {
             return res.status(401).json({ error: "Invalid or expired token" });
         }
-        
+
         const user = await User.findOne({ _id: decoded.userId });
 
         if (user) {

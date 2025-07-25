@@ -1,5 +1,70 @@
 const db = require('../db.js');
 
+/**
+ * @swagger
+ * tags:
+ *   name: Courses
+ *   description: Course management
+ */
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Course:
+ *       type: object
+ *       required:
+ *         - name
+ *         - number
+ *         - prefix
+ *         - creditHoursMin
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: MongoDB ObjectId
+ *         prefix:
+ *           type: string
+ *           description: Course code prefix (e.g., "SDEV")
+ *         number:
+ *           type: string
+ *           description: Course code number (e.g., "255")
+ *         name:
+ *           type: string
+ *           description: Full name of the course
+ *         program:
+ *           type: string
+ *           description: Program the course belongs to
+ *         description:
+ *           type: string
+ *           description: Description of the course
+ *         prerequisites:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: List of prerequisite course codes
+ *         creditHoursMin:
+ *           type: number
+ *           description: Minimum credit hours required
+ *         creditHoursMax:
+ *           type: number
+ *           description: Maximum credit hours allowed
+ *         lectureHoursMin:
+ *           type: number
+ *           description: Minimum lecture hours required
+ *         dateOfLastRevision:
+ *           type: string
+ *           format: date
+ *           description: Date this course was last revised
+ *         learningObjectives:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: Learning objectives of the course
+ *         topics:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: Topics covered in the course
+ */
 const courseSchema = new db.Schema({
     // Course code prefix. Ex. 'SDEV'
     prefix: { type: String, required: true },

@@ -24,10 +24,14 @@ export const authService = {
     login: async (credentials) => {
         const response = await api.post(`${AUTH_URL}/`, credentials);
 
-        const {userId, token } = response.data;
+        const { user, token } = response.data;
 
-        if(userId && token) {
+        if(user && token) {
+            UserService.cacher().cacheUser(user);
+
             TokenManager.setToken(token);
+
+            
         } else {
             throw new Error(response.data.error);
         }

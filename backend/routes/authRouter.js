@@ -95,7 +95,7 @@ router.post("/", async (req, res) => {
             updatedAt: user.updatedAt
         };
 
-        res.json({
+        res.status(200).json({
             user: userResponse,
             token
         });

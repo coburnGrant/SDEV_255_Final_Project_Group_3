@@ -41,12 +41,13 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (credentials) => {
         try {
-            const response = await authService.login(credentials);
+            await authService.login(credentials);
+
             // After successful login, get user details
             const currentUser = await UserService.getCurrent();
+
             setIsAuthenticated(true);
             setUser(currentUser);
-            return response;
         } catch (error) {
             throw error;
         }

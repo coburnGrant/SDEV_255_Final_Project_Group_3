@@ -1,6 +1,5 @@
 import api from "./api";
 import { ACCESS_TOKEN } from "../constants";
-import { jwtDecode } from "jwt-decode";
 import { UserService } from "./UserService";
 
 const AUTH_URL = 'auth'
@@ -20,6 +19,8 @@ const TokenManager = {
 }
 
 export const authService = {
+    tokenManager: () => { return TokenManager; },
+
     login: async (credentials) => {
         const response = await api.post(`${AUTH_URL}/`, credentials);
 
@@ -41,8 +42,15 @@ export const authService = {
 
         const res = await api.get(`${AUTH_URL}/status`);
 
+        const validToken = res.status == 200;
+
+        if(!validToken) {
+            TokenManager.clearToken();
+            UserService.cacher().clearCachedUser();
+        }
+
         // Any non 200 status means authentication failed
-        return res.status == 200;
+        return validToken;
     },
 
     clearAccessToken: () => {

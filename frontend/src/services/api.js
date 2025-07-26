@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ACCESS_TOKEN } from '../constants';
+import { authService } from './AuthService';
 const env = import.meta.env;
 
 const local = 'http://localhost:3000';
@@ -12,7 +13,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem(ACCESS_TOKEN);
+        const token = authService.tokenManager().getToken();
         if (token) {
             config.headers['x-auth'] = token;
         }

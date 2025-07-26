@@ -1,6 +1,7 @@
 const express = require('express');
 const { User, UserRole } = require('../models/User');
 const Authenticator = require('../Authenticator');
+const { authenticateToken } = require('../middleware/auth');
 const router = express.Router();
 
 // Create a new user
@@ -61,28 +62,28 @@ router.post("/", async function (req, res) {
     }
 });
 
-router.get('/me', async (req, res) => {
-    const token = req.headers['x-auth'];
-    if (!token) {
-        return res.status(400).json({ error: 'Missing x-auth header' });
-    }
-
+// Get current user details
+router.get('/me', authenticateToken, async (req, res) => {
     try {
-        const decoded = Authenticator.verifyToken(token);
+        const user = req.user;
+        
+        // Return user info (excluding password)
+        const userResponse = {
+            _id: user._id,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            role: user.role,
+            status: user.status,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
+        };
 
-        if (!decoded) {
-            return res.status(401).json({ error: "Invalid or expired token" });
-        }
-
-        const user = await User.findOne({ _id: decoded.userId });
-
-        if (user) {
-            res.status(201).json(user);
-        } else {
-            res.status(401).json({ error: "Invalid or expired token" });
-        }
+        res.json(userResponse);
     } catch (err) {
-        res.status(401).json({ error: "Invalid or expired token" });
+        console.error("Get user error:", err);
+        res.sendStatus(500);
     }
 });
 

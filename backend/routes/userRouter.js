@@ -5,10 +5,10 @@ const router = express.Router();
 
 // Create a new user
 router.post("/", async function (req, res) {
-    const { username, password, status, role } = req.body;
+    const { username, password, firstName, lastName, email, status, role } = req.body;
 
-    if (!username || !password) {
-        return res.status(400).json({ error: "Missing username or password" });
+    if (!username || !password || !firstName || !lastName || !email) {
+        return res.status(400).json({ error: "Invalid request" });
     }
 
     // Check if username already exists
@@ -41,6 +41,9 @@ router.post("/", async function (req, res) {
 
     const newUser = new User({
         username,
+        firstName,
+        lastName,
+        email,
         password: hashedPassword,
         status,
         role: userRole
@@ -55,6 +58,31 @@ router.post("/", async function (req, res) {
         res.status(201).json({ userId, token });
     } catch (err) {
         res.status(500).send(err);
+    }
+});
+
+router.get('/me', async (req, res) => {
+    const token = req.headers['x-auth'];
+    if (!token) {
+        return res.status(400).json({ error: 'Missing x-auth header' });
+    }
+
+    try {
+        const decoded = Authenticator.verifyToken(token);
+
+        if (!decoded) {
+            return res.status(401).json({ error: "Invalid or expired token" });
+        }
+
+        const user = await User.findOne({ _id: decoded.userId });
+
+        if (user) {
+            res.status(201).json(user);
+        } else {
+            res.status(401).json({ error: "Invalid or expired token" });
+        }
+    } catch (err) {
+        res.status(401).json({ error: "Invalid or expired token" });
     }
 });
 

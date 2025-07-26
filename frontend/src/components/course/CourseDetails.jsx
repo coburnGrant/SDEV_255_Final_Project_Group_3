@@ -1,6 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import CourseService from '../../services/CourseService.js';
+import { UserService } from "../../services/UserService.js";
 
 function CourseDetails() {
     // Grab the courseId from the URL
@@ -9,6 +10,9 @@ function CourseDetails() {
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [canEdit, setCanEdit] = useState(false);
+    const [canDelete, setCanDelete] = useState(false);
 
     const fetchCourse = async () => {
         try {
@@ -23,16 +27,16 @@ function CourseDetails() {
         }
     };
 
-    const deleteCourse = async() => {
+    const deleteCourse = async () => {
         const confirmation = confirm('Are you sure you want to delete this course?');
 
-        if(!confirmation) {
+        if (!confirmation) {
             return
         }
 
         setLoading(true);
 
-        if(error !== null) {
+        if (error !== null) {
             setError(null);
         }
 
@@ -55,10 +59,42 @@ function CourseDetails() {
         }
     };
 
+    const updatePermissions = async () => {
+        const user = await UserService.getCurrent();
+        
+        console.log('current user:', user);
+
+        const disallowAll = () => {
+            if(canDelete) {
+                setCanDelete(false);
+            }
+            if(canEdit) {
+                setCanEdit(false);
+            }
+        }
+
+        if(!user) {
+            disallowAll();
+            return;
+        }
+
+        switch(user.role) {
+            case "admin":
+                setCanDelete(true);
+            case "teacher":
+                setCanEdit(true);
+                break;
+            default:
+                disallowAll();
+        }
+    }
+
     useEffect(() => {
         fetchCourse();
 
         trackClick();
+
+        updatePermissions();
     }, [courseId]);
 
     return (
@@ -127,15 +163,21 @@ function CourseDetails() {
                 <p>No course topics</p>
             )}
 
-            <div className="d-flex justify-content-end">
-                <Link to={'./edit'} className="btn btn-ivy-tech me-2">
-                    <span>Edit<i className="bi bi-pencil ms-2"></i></span>
-                </Link>
+            {canDelete || canEdit &&
+                <div className="d-flex justify-content-end">
+                    {canEdit &&
+                        <Link to={'./edit'} className="btn btn-ivy-tech me-2">
+                            <span>Edit<i className="bi bi-pencil ms-2"></i></span>
+                        </Link>
+                    }
 
-                <button className="btn btn-danger" onClick={deleteCourse}>
-                    <span>Delete<i className="bi bi-trash ms-2"></i></span>
-                </button>
-            </div>
+                    {canDelete &&
+                        <button className="btn btn-danger" onClick={deleteCourse}>
+                            <span>Delete<i className="bi bi-trash ms-2"></i></span>
+                        </button>
+                    }
+                </div>
+            }
         </div>
     );
 };

@@ -37,7 +37,7 @@ const canManageCourses = (req, res, next) => {
 
 // Middleware to check if user has permission to delete courses
 const canDeleteCourses = (req, res, next) => {
-    const allowedRoles = [UserRole.SUPER_ADMIN, UserRole.ADMIN];
+    const allowedRoles = [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.TEACHER];
     
     if (!allowedRoles.includes(req.user.role)) {
         return res.status(403).json({ error: 'Insufficient permissions to delete courses' });

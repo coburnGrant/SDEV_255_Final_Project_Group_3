@@ -30,8 +30,6 @@ export const authService = {
             UserService.cacher().cacheUser(user);
 
             TokenManager.setToken(token);
-
-            
         } else {
             throw new Error(response.data.error);
         }

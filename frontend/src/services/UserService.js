@@ -19,7 +19,7 @@ const UserCacher = {
 }
 
 const editableRoles = ['teacher', 'admin', 'super-admin'];
-const deletableRoles = ['admin', 'super-admin'];
+const deletableRoles = editableRoles;
 
 export const UserService = {
     cacher: () => { return UserCacher; },

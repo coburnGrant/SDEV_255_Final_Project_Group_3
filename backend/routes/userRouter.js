@@ -1,14 +1,15 @@
 const express = require('express');
 const { User, UserRole } = require('../models/User');
 const Authenticator = require('../Authenticator');
+const { authenticateToken } = require('../middleware/auth');
 const router = express.Router();
 
 // Create a new user
 router.post("/", async function (req, res) {
-    const { username, password, status, role } = req.body;
+    const { username, password, firstName, lastName, email, status, role } = req.body;
 
-    if (!username || !password) {
-        return res.status(400).json({ error: "Missing username or password" });
+    if (!username || !password || !firstName || !lastName || !email) {
+        return res.status(400).json({ error: "Invalid request" });
     }
 
     // Check if username already exists
@@ -41,6 +42,9 @@ router.post("/", async function (req, res) {
 
     const newUser = new User({
         username,
+        firstName,
+        lastName,
+        email,
         password: hashedPassword,
         status,
         role: userRole
@@ -55,6 +59,31 @@ router.post("/", async function (req, res) {
         res.status(201).json({ userId, token });
     } catch (err) {
         res.status(500).send(err);
+    }
+});
+
+// Get current user details
+router.get('/me', authenticateToken, async (req, res) => {
+    try {
+        const user = req.user;
+        
+        // Return user info (excluding password)
+        const userResponse = {
+            _id: user._id,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            role: user.role,
+            status: user.status,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
+        };
+
+        res.json(userResponse);
+    } catch (err) {
+        console.error("Get user error:", err);
+        res.sendStatus(500);
     }
 });
 

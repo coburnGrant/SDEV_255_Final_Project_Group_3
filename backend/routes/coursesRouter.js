@@ -1,72 +1,6 @@
-/**
- * @swagger
- * tags:
- *   name: Courses
- *   description: Course management
- */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Course:
- *       type: object
- *       required:
- *         - name
- *         - number
- *         - prefix
- *         - creditHoursMin
- *       properties:
- *         _id:
- *           type: string
- *           description: MongoDB ObjectId
- *         prefix:
- *           type: string
- *           description: Course code prefix (e.g., "SDEV")
- *         number:
- *           type: string
- *           description: Course code number (e.g., "255")
- *         name:
- *           type: string
- *           description: Full name of the course
- *         program:
- *           type: string
- *           description: Program the course belongs to
- *         description:
- *           type: string
- *           description: Description of the course
- *         prerequisites:
- *           type: array
- *           items:
- *             type: string
- *           description: List of prerequisite course codes
- *         creditHoursMin:
- *           type: number
- *           description: Minimum credit hours required
- *         creditHoursMax:
- *           type: number
- *           description: Maximum credit hours allowed
- *         lectureHoursMin:
- *           type: number
- *           description: Minimum lecture hours required
- *         dateOfLastRevision:
- *           type: string
- *           format: date
- *           description: Date this course was last revised
- *         learningObjectives:
- *           type: array
- *           items:
- *             type: string
- *           description: Learning objectives of the course
- *         topics:
- *           type: array
- *           items:
- *             type: string
- *           description: Topics covered in the course
- */
-
 const express = require("express");
 const Course = require("../models/Course");
+const { authenticateToken, canManageCourses, canDeleteCourses } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -101,6 +35,8 @@ router.get("/", async (req, res) => {
  *   post:
  *     summary: Create a new course
  *     tags: [Courses]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -112,12 +48,16 @@ router.get("/", async (req, res) => {
  *         description: Course created
  *       400:
  *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Insufficient permissions
  */
-router.post("/", async (req, res) => {
+router.post("/", authenticateToken, canManageCourses, async (req, res) => {
     const json = req.body;
 
     if (!json) {
-        res.status(400).send('No course data found in request');
+        return res.status(400).send('No course data found in request');
     }
 
     try {
@@ -186,7 +126,7 @@ router.get("/:id", async (req, res) => {
     const courseId = req.params.id;
     
     if(!courseId) {
-        res.sendStatus(400);
+        return res.sendStatus(400);
     }
 
     try {
@@ -204,6 +144,8 @@ router.get("/:id", async (req, res) => {
  *   put:
  *     summary: Update a course
  *     tags: [Courses]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -222,14 +164,17 @@ router.get("/:id", async (req, res) => {
  *         description: Course updated
  *       400:
  *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Insufficient permissions
  */
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticateToken, canManageCourses, async (req, res) => {
     const courseId = req.params.id;
     const course = req.body;
 
     if (!courseId || !course) {
-        res.sendStatus(400);
-        return
+        return res.sendStatus(400);
     }
 
     try {
@@ -248,6 +193,8 @@ router.put("/:id", async (req, res) => {
  *   delete:
  *     summary: Delete a course
  *     tags: [Courses]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -260,13 +207,16 @@ router.put("/:id", async (req, res) => {
  *         description: Course deleted
  *       400:
  *         description: Invalid ID
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Insufficient permissions
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateToken, canDeleteCourses, async (req, res) => {
     const courseId = req.params.id;
 
     if (!courseId) {
-        res.sendStatus(400);
-        return
+        return res.sendStatus(400);
     }
 
     try {
@@ -298,9 +248,7 @@ router.post('/:id/view', async (req, res) => {
     const courseID = req.params.id;
 
     if (!courseID) {
-        res.sendStatus(404);
-
-        return;
+        return res.sendStatus(404);
     }
 
     try {

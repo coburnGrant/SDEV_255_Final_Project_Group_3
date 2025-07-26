@@ -1,5 +1,5 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect, use } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import CourseService from '../../services/CourseService.js';
 import CourseForm from "./CourseForm.jsx";
 
@@ -48,11 +48,13 @@ function EditCourse() {
 
     return (
         <div className="container mt-3">
-            {loading && <p>Loading course details...</p>}
-            <p>Editing</p>
+            <Link to="/courses" className="btn btn-plain ivy-tech-text mb-1">
+                <span><i className="bi bi-arrow-left pe-1"></i>Back</span>
+            </Link>
 
             <div className="d-flex align-items-center">
-                <h2>{course?.prefix}-{course?.number} | {course?.name}</h2>
+                <h3 className="text-muted mb-1">Editing</h3>
+                <i className="bi bi-pencil-fill ms-2 ivy-tech-text"></i>
 
                 {saving &&
                     <div className="spinner-border ivy-tech-text mx-3" role="status">
@@ -60,6 +62,10 @@ function EditCourse() {
                     </div>
                 }
             </div>
+
+            <h2 className="fw-bold ivy-tech-text mb-2">{course?.prefix}-{course?.number} | {course?.name}</h2>
+
+            {loading && <p>Loading course details...</p>}
 
             <CourseForm course={course} onSubmit={updateCourse} />
         </div>

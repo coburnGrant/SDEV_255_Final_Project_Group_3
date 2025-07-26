@@ -18,6 +18,9 @@ const UserCacher = {
     }
 }
 
+const editableRoles = ['teacher', 'admin', 'super-admin'];
+const deletableRoles = ['admin', 'super-admin'];
+
 export const UserService = {
     cacher: () => { return UserCacher; },
 
@@ -25,7 +28,7 @@ export const UserService = {
         const response = await api.post(`${USER_API_URL}`, data);
 
         const token = response.data.token;
-        
+
         if (response.status === 201 || token) {
             localStorage.setItem(ACCESS_TOKEN, token);
         }
@@ -36,18 +39,55 @@ export const UserService = {
     getCurrent: async () => {
         const cached = UserCacher.getCachedUser();
 
-        if(cached) {
+        if (cached) {
             return cached;
         }
 
-        const response = await api.get(`${USER_API_URL}/me`);
+        try {
+            const response = await api.get(`${USER_API_URL}/me`);
 
-        const userData = response.data;
+            const userData = response.data;
 
-        if(userData && userData._id) {
-            UserCacher.cacheUser(userData);
+            if (userData && userData._id) {
+                UserCacher.cacheUser(userData);
+            }
+
+            return userData;
+        } catch {
+            return null;
+        }
+    },
+
+    canAddCourse: (user) => {
+        if (!user) {
+            return false;
         }
 
-        return userData;
+        const userRole = user.role;
+
+        if (!userRole) {
+            return false;
+        }
+
+        switch (user.role) {
+            case 'super-admin':
+            case 'admin':
+            case 'teacher':
+                return true;
+            default:
+                return false
+        }
+    },
+
+    canEditAndDelete: (user) => {
+        if (!user) {
+            return false;
+        }
+
+        const role = user.role;
+        const canEdit = editableRoles.includes(role);
+        const canDelete = deletableRoles.includes(role);
+
+        return { canEdit, canDelete }
     }
 };

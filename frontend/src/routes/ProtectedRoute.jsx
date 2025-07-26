@@ -1,28 +1,14 @@
 import { Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { authService } from "../services/AuthService";
+import { useAuth } from "../context/AuthContext";
 
 function ProtectedRoute({ children }) {
-    const [isAuthenticated, setIsAuthenticated] = useState(null);
+    const { isAuthenticated, loading } = useAuth();
 
-    useEffect(() => {
-        authenticate().catch(() => {
-            setIsAuthenticated(false);
-        })
-    })
-
-    const authenticate = async () => {
-        // Make call to backend to get auth status
-        const authenticated = await authService.status();
-
-        setIsAuthenticated(authenticated);
-    }
-
-    if (isAuthenticated === null) {
+    if (loading) {
         return <div>Loading...</div>;
-    } else {
-        return isAuthenticated ? children : <Navigate to="/login" replace/>;
     }
+
+    return isAuthenticated ? children : <Navigate to="/login" replace />;
 }
 
 export default ProtectedRoute;

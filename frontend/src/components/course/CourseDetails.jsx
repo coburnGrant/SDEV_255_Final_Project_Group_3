@@ -2,11 +2,13 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import CourseService from '../../services/CourseService.js';
 import { UserService } from "../../services/UserService.js";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 function CourseDetails() {
     // Grab the courseId from the URL
     const { courseId } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -60,42 +62,21 @@ function CourseDetails() {
     };
 
     const updatePermissions = async () => {
-        const user = await UserService.getCurrent();
-        
-        console.log('current user:', user);
+        const {canEdit, canDelete } = UserService.canEditAndDelete(user);
 
-        const disallowAll = () => {
-            if(canDelete) {
-                setCanDelete(false);
-            }
-            if(canEdit) {
-                setCanEdit(false);
-            }
-        }
-
-        if(!user) {
-            disallowAll();
-            return;
-        }
-
-        switch(user.role) {
-            case "admin":
-                setCanDelete(true);
-            case "teacher":
-                setCanEdit(true);
-                break;
-            default:
-                disallowAll();
-        }
+        setCanEdit(canEdit);
+        setCanDelete(canDelete);
     }
 
     useEffect(() => {
         fetchCourse();
 
         trackClick();
-
-        updatePermissions();
     }, [courseId]);
+
+    useEffect(() => {
+        updatePermissions();
+    }, [user])
 
     return (
         <div className="container">
@@ -109,7 +90,7 @@ function CourseDetails() {
 
             <div>
                 <h3 className="text-muted mb-1">{course?.prefix}-{course?.number}</h3>
-                <h2 className="fw-bold">{course?.name}</h2>
+                <h2 className="fw-bold ivy-tech-text">{course?.name}</h2>
                 <h6 className="text-secondary mb-2">{course?.program}</h6>
 
 
@@ -163,7 +144,7 @@ function CourseDetails() {
                 <p>No course topics</p>
             )}
 
-            {canDelete || canEdit &&
+            {(canDelete || canEdit) &&
                 <div className="d-flex justify-content-end">
                     {canEdit &&
                         <Link to={'./edit'} className="btn btn-ivy-tech me-2">

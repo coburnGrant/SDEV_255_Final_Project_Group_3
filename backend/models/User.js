@@ -1,7 +1,7 @@
 const db = require("../db");
 
 class UserRole {
-    static SUPER_ADMIN = "super admin"
+    static SUPER_ADMIN = "super-admin"
     static ADMIN = "admin";
     static TEACHER = "teacher";
     static STUDENT = "student";

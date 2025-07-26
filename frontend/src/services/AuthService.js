@@ -5,14 +5,35 @@ import { UserService } from "./UserService";
 
 const AUTH_URL = 'auth'
 
+const TokenManager = {
+    getToken: () => {
+        return localStorage.getItem(ACCESS_TOKEN);
+    },
+
+    setToken: (token) => {
+        localStorage.setItem(ACCESS_TOKEN, token);
+    },
+
+    clearToken: () => {
+        localStorage.removeItem(ACCESS_TOKEN);
+    }
+}
+
 export const authService = {
     login: async (credentials) => {
         const response = await api.post(`${AUTH_URL}/`, credentials);
-        return response.data;
+
+        const {userId, token } = response.data;
+
+        if(userId && token) {
+            TokenManager.setToken(token);
+        } else {
+            throw new Error(response.data.error);
+        }
     },
 
     status: async () => {
-        const token = localStorage.getItem(ACCESS_TOKEN);
+        const token = TokenManager.getToken();
 
         if (!token) {
             return false;
@@ -25,12 +46,12 @@ export const authService = {
     },
 
     clearAccessToken: () => {
-        localStorage.removeItem(ACCESS_TOKEN);
+        TokenManager.clearToken();
     },
 
     logout: () => {
-        this.clearAccessToken();
+        TokenManager.clearToken();
 
-        UserService.clearCachedUser();
+        UserService.cacher().clearCachedUser();
     }
 };

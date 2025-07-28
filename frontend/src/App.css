@@ -36,6 +36,10 @@
   letter-spacing: 0.5px;
 }
 
+.bg-ivy-tech {
+  background-color: var(--ivy-tech-green);
+}
+
 /* Custom button styles */
 .btn-ivy-tech {
   background-color: var(--ivy-tech-green) !important;

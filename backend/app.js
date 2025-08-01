@@ -23,6 +23,9 @@ app.use('/api/user', userRouter);
 const coursesRouter = require('./routes/coursesRouter');
 app.use("/api/courses", coursesRouter);
 
+const cartRouter = require('./routes/cartRouter');
+app.use("/api/cart", cartRouter);
+
 const swagger = require('./swagger.js');
 
 // Serve Swagger docs

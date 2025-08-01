@@ -33,7 +33,7 @@ function Courses() {
     // Search and filter courses
     const handleSearch = (searchValue) => {
         setSearchTerm(searchValue);
-        
+
         if (!searchValue.trim()) {
             setFilteredCourses(courses);
             setSearchActive(false);
@@ -41,10 +41,10 @@ function Courses() {
         }
 
         setSearchActive(true);
-        
+
         const filtered = courses.filter(course => {
             const searchLower = searchValue.toLowerCase();
-            
+
             // Search in multiple fields
             return (
                 course.name?.toLowerCase().includes(searchLower) ||
@@ -57,7 +57,7 @@ function Courses() {
                 `${course.prefix}-${course.number}`.toLowerCase().includes(searchLower)
             );
         });
-        
+
         setFilteredCourses(filtered);
     };
 
@@ -91,6 +91,9 @@ function Courses() {
                         <div className="row justify-content-center">
                             <div className="col-md-8 col-lg-6">
                                 <div className="input-group">
+                                    <span className="input-group-text">
+                                        <i className="bi bi-search"></i>
+                                    </span>
                                     <input
                                         type="text"
                                         className="form-control"
@@ -107,17 +110,13 @@ function Courses() {
                                             <i className="bi bi-x"></i>
                                         </button>
                                     )}
-                                    <button className="btn btn-ivy-tech" type="button">
-                                        <i className="bi bi-search me-1"></i>
-                                        Search
-                                    </button>
                                 </div>
-                                
+
                                 {/* Search Results Info */}
                                 {searchActive && (
                                     <div className="mt-2 text-center">
                                         <small className="text-muted">
-                                            Found {filteredCourses.length} course{filteredCourses.length !== 1 ? 's' : ''} 
+                                            Found {filteredCourses.length} course{filteredCourses.length !== 1 ? 's' : ''}
                                             {searchTerm && ` for "${searchTerm}"`}
                                         </small>
                                     </div>

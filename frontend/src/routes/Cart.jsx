@@ -35,7 +35,7 @@ export default function Cart() {
         }
     };
 
-    const handleCheckout = () => {
+    const addToSchedule = () => {
         // TODO: Implement checkout process
         alert('Checkout functionality coming soon!');
     };
@@ -168,13 +168,13 @@ export default function Cart() {
                                         <div className="card-header bg-ivy-tech text-white">
                                             <h5 className="pt-1 mb-0">
                                                 <i className="bi bi-receipt me-2"></i>
-                                                Order Summary
+                                                Course Summary
                                             </h5>
                                         </div>
 
                                         <div className="card-body">
                                             <div className="d-flex justify-content-between mb-2">
-                                                <span>Items ({cartItems.length}):</span>
+                                                <span>Courses ({cartItems.length}):</span>
                                             </div>
 
                                             <ul>
@@ -192,11 +192,11 @@ export default function Cart() {
                                             </div>
                                             <button
                                                 className="btn btn-ivy-tech w-100"
-                                                onClick={handleCheckout}
+                                                onClick={addToSchedule}
                                                 disabled={loading}
                                             >
-                                                <i className="bi bi-credit-card me-1"></i>
-                                                Proceed to Checkout
+                                                <i className="bi bi-calendar me-1"></i>
+                                                Add to schedule
                                             </button>
                                             <div className="text-center mt-3">
                                                 <small className="text-muted">

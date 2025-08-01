@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useTheme } from '../../context/ThemeContext'
 import ivyTechLogo from '../../images/ivy-tech-logo.png'
 import AccountDropdown from './AccountDropdown'
+import CartIcon from './CartIcon'
 import { useAuth } from '../../context/AuthContext';
 import { UserService } from '../../services/UserService';
 
@@ -44,6 +45,8 @@ function Navigation() {
                 <Link className="nav-link" to="/add-course">Add Course</Link>
               </li>
             }
+
+            <CartIcon />
 
             <AccountDropdown isDarkMode={isDarkMode} />
 

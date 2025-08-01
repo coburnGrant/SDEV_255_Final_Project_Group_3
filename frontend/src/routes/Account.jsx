@@ -41,7 +41,7 @@ export default function Account() {
                     <div className="card shadow">
                         <div className="card-header bg-ivy-tech text-white">
                             <h3 className="my-1">
-                                <i className="fas fa-user-circle me-2"></i>
+                                <i className="bi bi-person-circle me-2"></i>
                                 Account Details
                             </h3>
                         </div>
@@ -146,7 +146,7 @@ export default function Account() {
                                         className="btn btn-outline-danger"
                                         onClick={handleLogout}
                                     >
-                                        <i className="fas fa-sign-out-alt me-1"></i>
+                                        <i className="bi bi-box-arrow-left me-1"></i>
                                         Logout
                                     </button>
                                 </div>

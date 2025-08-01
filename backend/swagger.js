@@ -8,7 +8,7 @@ const swaggerOptions = {
     info: {
       title: 'Ivy Tech Course Management API',
       version: '1.0.0',
-      description: 'API for managing courses, users, and authentication in the Ivy Tech Course Management System',
+      description: 'API for managing courses, users, authentication, and shopping cart in the Ivy Tech Course Management System',
     },
     servers: [
       {
@@ -82,6 +82,101 @@ const swaggerOptions = {
               type: 'string',
               format: 'date-time',
               description: 'Timestamp when user was last updated'
+            }
+          }
+        },
+        Course: {
+          type: 'object',
+          properties: {
+            _id: {
+              type: 'string',
+              description: 'Unique identifier for the course'
+            },
+            title: {
+              type: 'string',
+              description: 'Course title'
+            },
+            description: {
+              type: 'string',
+              description: 'Course description'
+            },
+            instructor: {
+              type: 'string',
+              description: 'Course instructor name'
+            },
+            duration: {
+              type: 'string',
+              description: 'Course duration'
+            },
+            level: {
+              type: 'string',
+              description: 'Course difficulty level'
+            },
+            price: {
+              type: 'number',
+              description: 'Course price'
+            },
+            clickCount: {
+              type: 'number',
+              description: 'Number of times course was viewed'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Timestamp when course was created'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Timestamp when course was last updated'
+            }
+          }
+        },
+        CartItem: {
+          type: 'object',
+          properties: {
+            courseId: {
+              $ref: '#/components/schemas/Course',
+              description: 'Course information'
+            },
+            addedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Timestamp when course was added to cart'
+            }
+          }
+        },
+        ShoppingCart: {
+          type: 'object',
+          properties: {
+            _id: {
+              type: 'string',
+              description: 'Unique identifier for the shopping cart'
+            },
+            userId: {
+              type: 'string',
+              description: 'User ID who owns this cart'
+            },
+            items: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/CartItem'
+              },
+              description: 'Array of courses in the cart'
+            },
+            itemCount: {
+              type: 'number',
+              description: 'Number of items in the cart'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Timestamp when cart was created'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Timestamp when cart was last updated'
             }
           }
         },

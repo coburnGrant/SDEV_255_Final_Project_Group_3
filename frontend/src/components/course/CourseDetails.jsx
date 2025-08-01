@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import CourseService from '../../services/CourseService.js';
 import { UserService } from "../../services/UserService.js";
 import { useAuth } from "../../context/AuthContext.jsx";
+import AddToCartButton from './AddToCartButton.jsx';
 
 function CourseDetails() {
     // Grab the courseId from the URL
@@ -93,7 +94,6 @@ function CourseDetails() {
                 <h2 className="fw-bold ivy-tech-text">{course?.name}</h2>
                 <h6 className="text-secondary mb-2">{course?.program}</h6>
 
-
                 {course?.dateOfLastRevision && (
                     <p className="text-sm text-gray-500">
                         <span className="font-medium">Last Revised:</span> {new Date(course.dateOfLastRevision).toLocaleDateString()}
@@ -144,21 +144,30 @@ function CourseDetails() {
                 <p>No course topics</p>
             )}
 
-            {(canDelete || canEdit) &&
-                <div className="d-flex justify-content-end">
-                    {canEdit &&
-                        <Link to={'./edit'} className="btn btn-ivy-tech me-2">
-                            <span>Edit<i className="bi bi-pencil ms-2"></i></span>
-                        </Link>
-                    }
+            <hr className="my-4" />
 
-                    {canDelete &&
-                        <button className="btn btn-danger" onClick={deleteCourse}>
-                            <span>Delete<i className="bi bi-trash ms-2"></i></span>
-                        </button>
-                    }
+            {/* Action Buttons */}
+            <div className="d-flex justify-content-between align-items-center">
+                <div>
+                    <AddToCartButton courseId={courseId} className="me-2" />
                 </div>
-            }
+                
+                {(canDelete || canEdit) && (
+                    <div className="d-flex">
+                        {canEdit && (
+                            <Link to={'./edit'} className="btn btn-ivy-tech me-2">
+                                <span>Edit<i className="bi bi-pencil ms-2"></i></span>
+                            </Link>
+                        )}
+
+                        {canDelete && (
+                            <button className="btn btn-danger" onClick={deleteCourse}>
+                                <span>Delete<i className="bi bi-trash ms-2"></i></span>
+                            </button>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

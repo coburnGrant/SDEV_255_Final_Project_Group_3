@@ -67,7 +67,7 @@ export default function Cart() {
                 <div className="col-12">
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h2>
-                            <i className="fas fa-shopping-cart me-2"></i>
+                            <i className="bi bi-cart me-2"></i>
                             Shopping Cart
                         </h2>
                         {cartItems.length > 0 && (
@@ -76,7 +76,7 @@ export default function Cart() {
                                 onClick={handleClearCart}
                                 disabled={loading}
                             >
-                                <i className="fas fa-trash me-1"></i>
+                                <i className="bi bi-trash me-1"></i>
                                 Clear Cart
                             </button>
                         )}
@@ -90,14 +90,14 @@ export default function Cart() {
 
                     {cartItems.length === 0 ? (
                         <div className="text-center py-5">
-                            <i className="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                            <i className="bi bi-cart fs-2 text-muted mb-3"></i>
                             <h4 className="text-muted">Your cart is empty</h4>
                             <p className="text-muted">Start shopping by browsing our courses!</p>
                             <button
                                 className="btn btn-ivy-tech"
                                 onClick={() => navigate('/courses')}
                             >
-                                <i className="fas fa-search me-1"></i>
+                                <i className="bi bi-search me-1"></i>
                                 Browse Courses
                             </button>
                         </div>
@@ -131,7 +131,7 @@ export default function Cart() {
                                                         <div className="row mt-2">
                                                             <div className="col-md-6">
                                                                 <small className="text-muted">
-                                                                    <i className="fas fa-calendar me-1"></i>
+                                                                    <i className="bi bi-calendar me-1"></i>
                                                                     Added {new Date(item.addedAt).toLocaleDateString()}
                                                                 </small>
                                                             </div>
@@ -171,7 +171,7 @@ export default function Cart() {
                                                 Order Summary
                                             </h5>
                                         </div>
-                                        
+
                                         <div className="card-body">
                                             <div className="d-flex justify-content-between mb-2">
                                                 <span>Items ({cartItems.length}):</span>
@@ -195,7 +195,7 @@ export default function Cart() {
                                                 onClick={handleCheckout}
                                                 disabled={loading}
                                             >
-                                                <i className="fas fa-credit-card me-1"></i>
+                                                <i className="bi bi-credit-card me-1"></i>
                                                 Proceed to Checkout
                                             </button>
                                             <div className="text-center mt-3">

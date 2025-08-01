@@ -100,7 +100,7 @@ export default function AddToCartButton({ courseId, className = '' }) {
                 </>
             ) : (
                 <>
-                    <i className="fas fa-cart-plus me-1"></i>
+                    <i className="bi bi-cart-plus me-1"></i>
                     Add to Cart
                 </>
             )}

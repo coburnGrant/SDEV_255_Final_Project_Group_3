@@ -15,6 +15,7 @@ import Login from './routes/Login'
 import Register from './routes/Register'
 import Account from './routes/Account'
 import Cart from './routes/Cart'
+import About from './routes/About'
 
 function App() {
   return (
@@ -30,6 +31,8 @@ function App() {
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/courses" element={<Courses />} />
+                  <Route path='/about' element={<About />} />
+
                   <Route path="/cart" element={
                     <ProtectedRoute>
                       <Cart />

@@ -52,9 +52,9 @@ function Home() {
                             <Link to='./courses' className="btn me-3 btn-ivy-tech">
                                 Browse Courses
                             </Link>
-                            <button className="btn btn-outline-secondary">
+                            <Link to='./about' className="btn btn-outline-secondary">
                                 Learn More
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </div>

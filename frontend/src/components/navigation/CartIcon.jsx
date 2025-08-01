@@ -16,7 +16,7 @@ export default function CartIcon() {
     return (
         <li className="nav-item">
             <Link className="nav-link position-relative" to="/cart">
-                Cart<i className="fas bi-cart ms-1"></i>
+                Cart<i className="bi bi-cart ms-1"></i>
             </Link>
         </li>
     );

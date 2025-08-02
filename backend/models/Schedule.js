@@ -19,8 +19,7 @@ const scheduleSchema = new db.Schema({
     userId: {
         type: db.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
-        unique: true
+        required: true
     },
     term: {
         type: String,

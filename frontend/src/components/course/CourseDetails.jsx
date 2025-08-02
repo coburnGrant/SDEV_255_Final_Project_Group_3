@@ -20,7 +20,6 @@ function CourseDetails() {
     const fetchCourse = async () => {
         try {
             const course = await CourseService.getCourseById(courseId);
-
             setCourse(course);
         } catch (error) {
             console.error('Error fetching course:', error);
@@ -63,7 +62,7 @@ function CourseDetails() {
     };
 
     const updatePermissions = async () => {
-        const {canEdit, canDelete } = UserService.canEditAndDelete(user);
+        const { canEdit, canDelete } = UserService.canEditAndDelete(user);
 
         setCanEdit(canEdit);
         setCanDelete(canDelete);
@@ -151,7 +150,7 @@ function CourseDetails() {
                 <div>
                     <AddToCartButton courseId={courseId} className="me-2" />
                 </div>
-                
+
                 {(canDelete || canEdit) && (
                     <div className="d-flex">
                         {canEdit && (

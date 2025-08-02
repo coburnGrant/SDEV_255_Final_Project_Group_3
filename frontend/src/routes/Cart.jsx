@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import ScheduleService from '../services/ScheduleService';
+
+const TERMS = ['Spring', 'Summer', 'Fall'];
+const CURRENT_YEAR = new Date().getFullYear();
 
 export default function Cart() {
     const { cart, loading, error, removeFromCart, clearCart, getCartItems } = useCart();
@@ -9,6 +13,14 @@ export default function Cart() {
     const navigate = useNavigate();
     const [removingItem, setRemovingItem] = useState(null);
     const [cartItems, setCartItems] = useState([]);
+
+    const [checkoutTerm, setCheckoutTerm] = useState('');
+    const [checkoutYear, setCheckoutYear] = useState(CURRENT_YEAR);
+    const [submitting, setSubmitting] = useState(false);
+
+    const [schedules, setSchedules] = useState([]);
+    const [selectedScheduleId, setSelectedScheduleId] = useState('');
+    const [useExistingSchedule, setUseExistingSchedule] = useState(false);
 
     // Redirect if not a student
     if (user && user.role !== 'student') {
@@ -35,9 +47,49 @@ export default function Cart() {
         }
     };
 
-    const addToSchedule = () => {
-        // TODO: Implement checkout process
-        alert('Checkout functionality coming soon!');
+    const loadSchedules = async () => {
+        try {
+            const data = await ScheduleService.getSchedules();
+            setSchedules(data);
+        } catch (err) {
+            console.error('Failed to fetch schedules:', err);
+        }
+    };
+
+    const addToSchedule = async () => {
+        setSubmitting(true);
+
+        try {
+            if (useExistingSchedule && selectedScheduleId) {
+                await ScheduleService.addCoursesToSchedule(selectedScheduleId);
+
+                alert('Added to schedule successfully!');
+            } else {
+                if (!checkoutTerm) {
+                    alert('Please select a term for the new schedule.');
+                    return;
+                }
+
+                await ScheduleService.addSchedule({
+                    term: checkoutTerm,
+                    year: checkoutYear
+                });
+
+                alert('Schedule created successfully!');
+            }
+
+            await clearCart();
+
+            navigate('/schedules');
+        } catch (err) {
+            console.error('Error checking out:', err);
+
+            const errMessage = err.response?.data?.message;
+
+            alert(`Failed to add schedule${errMessage ? `:\n${errMessage}` : '.'}`);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     useEffect(() => {
@@ -47,6 +99,10 @@ export default function Cart() {
             setCartItems([]);
         }
     }, [cart]);
+
+    useEffect(() => {
+        loadSchedules();
+    }, []);
 
     if (!cart && loading) {
         return (
@@ -151,7 +207,7 @@ export default function Cart() {
                                                             ) : (
                                                                 <>
                                                                     Remove
-                                                                    <i class="bi bi-trash ms-1"></i>
+                                                                    <i className="bi bi-trash ms-1"></i>
 
                                                                 </>
                                                             )}
@@ -178,8 +234,8 @@ export default function Cart() {
                                             </div>
 
                                             <ul>
-                                                {cartItems.map((item, i) => (
-                                                    <li key={i}>{item.courseId.name}</li>
+                                                {cartItems.map((item) => (
+                                                    <li key={item.courseId._id}>{item.courseId.name}</li>
                                                 ))}
                                             </ul>
 
@@ -190,13 +246,89 @@ export default function Cart() {
                                                     {cartItems.length}{cartItems.length == 1 ? ' Course' : ' Courses'}
                                                 </strong>
                                             </div>
+
+                                            {(schedules.length > 0) && (
+                                                <div className="mb-3 form-check">
+                                                    <input
+                                                        className="form-check-input"
+                                                        type="checkbox"
+                                                        checked={useExistingSchedule}
+                                                        onChange={(e) => {
+                                                            setUseExistingSchedule(e.target.checked);
+                                                            if (!e.target.checked) {
+                                                                setSelectedScheduleId('');
+                                                            }
+                                                        }}
+                                                        id="useExistingSchedule"
+                                                    />
+                                                    <label className="form-check-label" htmlFor="useExistingSchedule">
+                                                        Add to existing schedule
+                                                    </label>
+                                                </div>
+                                            )}
+
+                                            {useExistingSchedule ? (
+                                                <div className="mb-3">
+                                                    <label className="form-label">Select Existing Schedule</label>
+                                                    <select
+                                                        className="form-select"
+                                                        value={selectedScheduleId}
+                                                        onChange={(e) => setSelectedScheduleId(e.target.value)}
+                                                    >
+                                                        <option value="">Choose a schedule</option>
+                                                        {schedules.map(s => (
+                                                            <option key={s._id} value={s._id}>
+                                                                {s.term} {s.year}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <div className="mb-3">
+                                                        <label className="form-label">Select Term</label>
+                                                        <select
+                                                            className="form-select"
+                                                            value={checkoutTerm}
+                                                            onChange={(e) => setCheckoutTerm(e.target.value)}
+                                                        >
+                                                            <option value="">Choose a Term</option>
+                                                            {TERMS.map(term => (
+                                                                <option key={term} value={term}>{term}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+
+                                                    <div className="mb-3">
+                                                        <label className="form-label">Year</label>
+                                                        <input
+                                                            type="number"
+                                                            className="form-control"
+                                                            value={checkoutYear}
+                                                            min="2000"
+                                                            max="2100"
+                                                            onChange={(e) => setCheckoutYear(parseInt(e.target.value))}
+                                                        />
+                                                    </div>
+                                                </>
+                                            )}
+
                                             <button
                                                 className="btn btn-ivy-tech w-100"
                                                 onClick={addToSchedule}
-                                                disabled={loading}
+                                                disabled={loading || submitting}
                                             >
-                                                <i className="bi bi-calendar me-1"></i>
-                                                Add to schedule
+                                                {submitting ? (
+                                                    <>
+                                                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                        Processing...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <i className="bi bi-calendar me-1"></i>
+                                                        Add to schedule
+                                                    </>
+                                                )}
                                             </button>
                                             <div className="text-center mt-3">
                                                 <small className="text-muted">

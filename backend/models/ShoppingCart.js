@@ -19,15 +19,7 @@ const shoppingCartSchema = new db.Schema({
         required: true,
         unique: true
     },
-    items: [cartItemSchema],
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    }
+    items: [cartItemSchema]
 }, {
     timestamps: true
 });

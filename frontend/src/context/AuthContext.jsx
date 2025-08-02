@@ -23,14 +23,20 @@ export const AuthProvider = ({ children }) => {
 
     const checkAuthStatus = async () => {
         try {
-            const currentUser = await UserService.getCurrent();
-            if (currentUser) {
-                setIsAuthenticated(true);
-                setUser(currentUser);
-            } else {
-                setIsAuthenticated(false);
-                setUser(null);
+            const isAuthenticated = await authService.status();
+
+            if (isAuthenticated) {
+                const currentUser = await UserService.getCurrent();
+
+                if (currentUser) {
+                    setIsAuthenticated(true);
+                    setUser(currentUser);
+                    return;
+                }
             }
+
+            setIsAuthenticated(false);
+            setUser(null);
         } catch (error) {
             setIsAuthenticated(false);
             setUser(null);

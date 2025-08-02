@@ -2,7 +2,7 @@ const express = require("express");
 const ShoppingCart = require("../models/ShoppingCart");
 const Course = require("../models/Course");
 const { authenticateToken } = require("../middleware/auth");
-const { UserRole } = require("../models/User");
+const { UserRole } = require("../constants/user");
 
 const router = express.Router();
 

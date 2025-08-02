@@ -39,14 +39,23 @@ function Navigation() {
             <li className="nav-item">
               <Link className="nav-link" to="/courses">Courses</Link>
             </li>
-            
+
             {UserService.canAddCourse(user) &&
               <li className="nav-item">
                 <Link className="nav-link" to="/add-course">Add Course</Link>
               </li>
             }
 
-            <CartIcon />
+            {UserService.hasSchedule(user) &&
+              <li className='nav-item'>
+                <Link className='nav-link' to='/schedules'>
+                  <i className="bi bi-calendar me-1"></i>
+                  Schedule
+                </Link>
+              </li>
+            }
+
+            <CartIcon user={user} />
 
             <AccountDropdown isDarkMode={isDarkMode} />
 

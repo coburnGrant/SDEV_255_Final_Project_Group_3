@@ -62,7 +62,7 @@ function CourseDetails() {
     };
 
     const updatePermissions = async () => {
-        const {canEdit, canDelete } = UserService.canEditAndDelete(user);
+        const { canEdit, canDelete } = UserService.canEditAndDelete(user);
 
         setCanEdit(canEdit);
         setCanDelete(canDelete);
@@ -150,23 +150,23 @@ function CourseDetails() {
                 <div>
                     <AddToCartButton courseId={courseId} className="me-2" />
                 </div>
-                
+
                 {(canDelete || canEdit) && (
                     <div className="d-flex">
                         {canEdit && (
-                        <Link to={'./edit'} className="btn btn-ivy-tech me-2">
-                            <span>Edit<i className="bi bi-pencil ms-2"></i></span>
-                        </Link>
+                            <Link to={'./edit'} className="btn btn-ivy-tech me-2">
+                                <span>Edit<i className="bi bi-pencil ms-2"></i></span>
+                            </Link>
                         )}
 
                         {canDelete && (
-                        <button className="btn btn-danger" onClick={deleteCourse}>
-                            <span>Delete<i className="bi bi-trash ms-2"></i></span>
-                        </button>
+                            <button className="btn btn-danger" onClick={deleteCourse}>
+                                <span>Delete<i className="bi bi-trash ms-2"></i></span>
+                            </button>
                         )}
                     </div>
                 )}
-                </div>
+            </div>
         </div>
     );
 };

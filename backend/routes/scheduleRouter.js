@@ -45,8 +45,7 @@ router.get('/', authenticateToken, requireStudent, async (req, res) => {
         const term = req.query.term;
 
         const query = { userId, year };
-
-
+        
         if (term) {
             console.log(term);
             if (!ScheduleTerm.isValidTerm(term)) {
@@ -54,8 +53,6 @@ router.get('/', authenticateToken, requireStudent, async (req, res) => {
             }
             query.term = term;
         }
-
-        console.log(query);
 
         const schedules = await Schedule.find(query).populate('courses.course');
 

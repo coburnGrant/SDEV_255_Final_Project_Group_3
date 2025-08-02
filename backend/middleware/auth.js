@@ -1,5 +1,6 @@
 const Authenticator = require('../Authenticator');
-const { User, UserRole } = require('../models/User');
+const User = require('../models/User');
+const { UserRole } = require('../constants/user');
 
 // Middleware to verify JWT token and attach user to request
 const authenticateToken = async (req, res, next) => {

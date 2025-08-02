@@ -1,6 +1,7 @@
 import api from "./api";
 import { ACCESS_TOKEN } from "../constants";
 import { UserService } from "./UserService";
+import { jwtDecode } from "jwt-decode";
 
 const AUTH_URL = 'auth'
 
@@ -26,7 +27,7 @@ export const authService = {
 
         const { user, token } = response.data;
 
-        if(user && token) {
+        if (user && token) {
             UserService.cacher().cacheUser(user);
 
             TokenManager.setToken(token);
@@ -42,11 +43,28 @@ export const authService = {
             return false;
         }
 
+        try {
+            // Decode the token
+            const decoded = jwtDecode(token);
+
+            // Check if token has expired
+            const now = Date.now() / 1000; // convert to seconds
+            if (decoded.exp && decoded.exp < now) {
+                TokenManager.clearToken();
+                UserService.cacher().clearCachedUser();
+                return false;
+            } else {
+                return true;
+            }
+        } catch (err) {
+            console.error('error decoding access token', err);
+        }
+
         const res = await api.get(`${AUTH_URL}/status`);
 
         const validToken = res.status == 200;
 
-        if(!validToken) {
+        if (!validToken) {
             TokenManager.clearToken();
             UserService.cacher().clearCachedUser();
         }

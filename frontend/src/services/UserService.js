@@ -1,5 +1,6 @@
 import { ACCESS_TOKEN, USER_SAVE_KEY } from "../constants";
 import api from "./api";
+import { authService } from "./AuthService";
 
 const USER_API_URL = 'user'
 
@@ -89,5 +90,18 @@ export const UserService = {
         const canDelete = deletableRoles.includes(role);
 
         return { canEdit, canDelete }
+    },
+
+    hasCart: (user) => {
+        if (!user) { return false }
+
+        // Only show cart icon for students
+        return user.role === 'student';
+    },
+    
+    hasSchedule: (user) => {
+        if(!user) { return false }
+
+        return user.role === 'student';
     }
 };

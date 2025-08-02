@@ -153,7 +153,7 @@ function Courses() {
 
                     {/* Course List */}
                     {!loading && (
-                        <ul>
+                        <ul className="list-group">
                             {filteredCourses.length > 0 ? (
                                 filteredCourses.map(course => (
                                     <CourseListRow key={course._id} course={course} />

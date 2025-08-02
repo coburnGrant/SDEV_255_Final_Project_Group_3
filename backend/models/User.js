@@ -1,15 +1,5 @@
 const db = require("../db");
-
-class UserRole {
-    static SUPER_ADMIN = "super-admin"
-    static ADMIN = "admin";
-    static TEACHER = "teacher";
-    static STUDENT = "student";
-
-    static allRoles() {
-        return [this.SUPER_ADMIN, this.ADMIN, this.TEACHER, this.STUDENT];
-    }
-}
+const { UserRole } = require('../constants/user');
 
 const userSchema = new db.Schema({
     username: { type: String, required: true, unique: true },
@@ -30,4 +20,4 @@ const userSchema = new db.Schema({
 
 const User = db.model("User", userSchema);
 
-module.exports = { User, UserRole };
+module.exports = User;

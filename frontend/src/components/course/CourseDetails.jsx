@@ -20,7 +20,6 @@ function CourseDetails() {
     const fetchCourse = async () => {
         try {
             const course = await CourseService.getCourseById(courseId);
-
             setCourse(course);
         } catch (error) {
             console.error('Error fetching course:', error);
@@ -155,19 +154,19 @@ function CourseDetails() {
                 {(canDelete || canEdit) && (
                     <div className="d-flex">
                         {canEdit && (
-                            <Link to={'./edit'} className="btn btn-ivy-tech me-2">
-                                <span>Edit<i className="bi bi-pencil ms-2"></i></span>
-                            </Link>
+                        <Link to={'./edit'} className="btn btn-ivy-tech me-2">
+                            <span>Edit<i className="bi bi-pencil ms-2"></i></span>
+                        </Link>
                         )}
 
                         {canDelete && (
-                            <button className="btn btn-danger" onClick={deleteCourse}>
-                                <span>Delete<i className="bi bi-trash ms-2"></i></span>
-                            </button>
+                        <button className="btn btn-danger" onClick={deleteCourse}>
+                            <span>Delete<i className="bi bi-trash ms-2"></i></span>
+                        </button>
                         )}
                     </div>
                 )}
-            </div>
+                </div>
         </div>
     );
 };

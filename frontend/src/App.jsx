@@ -16,6 +16,8 @@ import Register from './routes/Register'
 import Account from './routes/Account'
 import Cart from './routes/Cart'
 import About from './routes/About'
+import Schedules from './routes/Schedules'
+import ScheduleDetails from './components/schedules/ScheduleDetails'
 
 function App() {
   return (
@@ -32,6 +34,18 @@ function App() {
                   <Route path="/register" element={<Register />} />
                   <Route path="/courses" element={<Courses />} />
                   <Route path='/about' element={<About />} />
+
+                  <Route path='/schedules' element={
+                    <ProtectedRoute>
+                      <Schedules />
+                    </ProtectedRoute>
+                  } />
+
+                  <Route path='/schedules/:scheduleId' element={
+                    <ProtectedRoute>
+                      <ScheduleDetails />
+                    </ProtectedRoute>
+                  } />
 
                   <Route path="/cart" element={
                     <ProtectedRoute>
